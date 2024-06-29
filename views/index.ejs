@@ -11,15 +11,12 @@
       crossorigin="anonymous"
       referrerpolicy="no-referrer"
     />
-  </head>
-
-  <body>
     <style>
       * {
         padding: 0;
         margin: 0;
         font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
-        "Lucida Sans", Arial, sans-serif;
+          "Lucida Sans", Arial, sans-serif;
       }
       html,
       body {
@@ -63,20 +60,18 @@
         background-size: cover;
         background-position: center;
         color: white;
-        padding:6px 0;
+        padding: 6px 0;
         overflow-y: scroll;
-        
       }
-      #chatsection::-webkit-scrollbar{
+      #chatsection::-webkit-scrollbar {
         display: none;
       }
-      #messages{
+      #messages {
         height: 100%;
         width: 100%;
         display: flex;
         flex-direction: column;
         padding: 6px;
-
       }
       #footersection {
         position: absolute;
@@ -85,7 +80,7 @@
         width: 100%;
         height: 6.5%;
         display: flex;
-        padding-bottom:0.75vw;
+        padding-bottom: 0.75vw;
         background-image: url(https://cdn.wallpapersafari.com/12/90/TyLtep.jpg);
         background-size: cover;
         background-position: center;
@@ -100,7 +95,6 @@
         box-sizing: border-box;
         color: aliceblue;
         font-size: 1.1rem;
-        
       }
       #sendMessage {
         background-color: transparent;
@@ -109,40 +103,80 @@
         margin-left: 13px;
         padding: 4px;
       }
-      #sendMessage>i{
+      #sendMessage > i {
         color: beige;
       }
-      .userside,.serverside{
-        display:block;
+      .userside,
+      .serverside {
+        display: block;
         border-radius: 9px;
         margin-bottom: 1vw;
         width: max-content;
-        
         padding: 5px;
       }
-      .userside{
+      .userside {
         background-color: grey;
         align-self: flex-end;
         max-width: 80%;
         margin-left: auto;
-        margin-right:0.75vw;
-      
-
-        
-        
-
-       
-
+        margin-right: 0.75vw;
       }
-      .serverside{
+      .serverside {
         background-color: rgb(71, 68, 68);
         align-self: flex-start;
         max-width: 80%;
         margin-right: auto;
-       
+      }
+
+      @media (max-width: 768px) {
+        #chat-container {
+          width: 80vw;
+          height: 80vh;
+        }
+        #header {
+          height: 10%;
+          font-size: 1.5rem;
+        }
+        #header > svg {
+          width: 15%;
+        }
+        #footersection {
+          height: 10%;
+        }
+        #messageInput {
+          font-size: 1rem;
+        }
+        #sendMessage {
+          font-size: 1.2rem;
+        }
+      }
+
+      @media (max-width: 480px) {
+        #chat-container {
+          width: 100vw;
+          height: 90vh;
+        }
+        #header {
+          height: 12%;
+          font-size: 1.2rem;
+        }
+        #header > svg {
+          width: 20%;
+        }
+        #footersection {
+          height: 12%;
+        }
+        #messageInput {
+          font-size: 0.9rem;
+        }
+        #sendMessage {
+          font-size: 1rem;
+        }
       }
     </style>
+  </head>
 
+  <body>
     <div class="maincont">
       <div id="chat-container">
         <div id="header">
@@ -170,14 +204,11 @@
               </radialGradient>
             </defs>
           </svg>
-
           <span style="font-weight: 700; font-size: 2.2rem">Gemini</span>
         </div>
 
         <div id="chatsection">
-          <div id="messages">
-           
-          </div>
+          <div id="messages"></div>
         </div>
         <div id="footersection">
           <input id="messageInput" type="text" placeholder="Enter Your Prompt" />
@@ -189,38 +220,37 @@
     </div>
 
     <script>
-      async function handlesend(){
+      async function handlesend() {
         const message = document.getElementById("messageInput").value.trim();
 
-          try {
-            const response = await fetch("/sendMessage", {
-              method: "POST",
-              headers: {
-                "Content-type": "Application/json",
-              },
-              body: JSON.stringify({ message }),
-            });
+        try {
+          const response = await fetch("/sendMessage", {
+            method: "POST",
+            headers: {
+              "Content-type": "Application/json",
+            },
+            body: JSON.stringify({ message }),
+          });
 
-            if (!response) {
-              throw new Error("failed to get to the server");
-            }
-            const responseData = await response.json();
-            botMessage = `<span class="userside"> ${message}</span><span class="serverside"> ${responseData.response}</span>`;
-            document.getElementById("messages").innerHTML += botMessage;
-            document.getElementById("messageInput").value = "";
-          } catch (error) {
-            console.log("error sending message", error);
+          if (!response) {
+            throw new Error("failed to get to the server");
           }
-
+          const responseData = await response.json();
+          botMessage = `<span class="userside"> ${message}</span><span class="serverside"> ${responseData.response}</span>`;
+          document.getElementById("messages").innerHTML += botMessage;
+          document.getElementById("messageInput").value = "";
+        } catch (error) {
+          console.log("error sending message", error);
+        }
       }
 
       document.getElementById("sendMessage").addEventListener("click", handlesend);
 
-      document.getElementById('messageInput').addEventListener('keydown',(event)=>{
-        if(event.key==='Enter'){
+      document.getElementById("messageInput").addEventListener("keydown", (event) => {
+        if (event.key === "Enter") {
           handlesend();
         }
-      })
+      });
     </script>
   </body>
 </html>
